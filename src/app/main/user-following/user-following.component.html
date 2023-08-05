@@ -23,7 +23,7 @@
       </div>
     </div>
 
-    <div class="pagination-buttons">
+    <div *ngIf="followings.length" class="pagination-buttons">
       <button
         class="prev-button"
         [disabled]="isPrevButtonDisabled()"
@@ -35,5 +35,6 @@
         (click)="onNextClick()"
       ></button>
     </div>
+    <div *ngIf="followings.length == 0" class="no-followings"><h2>No followings</h2></div>
   </div>
 </div>

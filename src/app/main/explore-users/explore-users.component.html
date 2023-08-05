@@ -27,7 +27,7 @@
       </div>
     </div>
 
-    <div class="pagination-buttons">
+    <div *ngIf="users.length" class="pagination-buttons">
       <button
         class="prev-button"
         [disabled]="isPrevButtonDisabled()"
