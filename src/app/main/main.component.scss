@@ -1,0 +1,19 @@
+.main {
+  display: flex;
+  overflow: hidden;
+  justify-content: center;
+  gap: 20px;
+  padding-top: 20px;
+}
+
+.mid-div {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.router-outlet-container {
+  flex: 1;
+  overflow-y: auto;
+}

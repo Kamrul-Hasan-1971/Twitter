@@ -1,0 +1,77 @@
+// timeline.component.scss
+.timeline-container {
+  width: 100%;
+  max-width: 600px;
+  max-height: 70vh;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  font-family: "Roboto", sans-serif;
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+  }
+
+  .tweets {
+    margin-top: 20px;
+    overflow-x: hidden;
+  }
+  .tweet {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    .profile-pic {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+    }
+
+    .tweet-content {
+      flex: 1;
+
+      .username {
+        font-weight: bold;
+      }
+
+      .timestamp {
+        color: #657786;
+        font-size: 14px;
+      }
+
+      .tweet-text {
+        margin-top: 5px;
+        font-size: 16px;
+      }
+    }
+
+    .actions {
+      display: flex;
+      gap: 15px;
+
+      .action-icon {
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+        color: #657786;
+        transition: color 0.3s ease-in-out;
+
+        &:hover {
+          color: #1da1f2;
+        }
+      }
+    }
+  }
+}

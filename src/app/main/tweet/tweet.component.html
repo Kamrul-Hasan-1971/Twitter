@@ -1,0 +1,14 @@
+<div class="tweet-container">
+  <textarea
+    class="tweet-input"
+    [(ngModel)]="tweetText"
+    placeholder="What's happening?"
+    (input)="onInputChange()"
+  ></textarea>
+  <div class="tweet-footer">
+    <p class="char-count">{{ charCount }}</p>
+    <button class="tweet-button" [disabled]="!canTweet()" (click)="onTweet()">
+      Tweet
+    </button>
+  </div>
+</div>

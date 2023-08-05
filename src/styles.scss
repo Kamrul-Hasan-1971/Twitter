@@ -1,1 +1,30 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: #f5f8fa;
+  font-family: 'Roboto', sans-serif
+  //align-items: center;
+}
+
+
+
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background-image: url('/assets/bg-2.jpg');
+  //background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Add global styles for other components here */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

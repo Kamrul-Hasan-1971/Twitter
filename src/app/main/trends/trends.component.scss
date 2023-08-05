@@ -1,0 +1,29 @@
+
+.trends-container {
+  width: 300px;
+  padding: 20px;
+  background-color: #f7f9fa;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+  font-family: "Roboto", sans-serif;
+
+  .trend {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    color: #1da1f2;
+    font-weight: bold;
+    transition: color 0.3s ease-in-out;
+
+    &:hover {
+      color: #0d8ed7;
+    }
+  }
+
+  .trending-topic {
+    color: #657786;
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,19 @@
+<!-- timeline.component.html -->
+<app-tweet (tweetCreated)="onTweetCreated($event)"></app-tweet>
+<div class="timeline-container">
+  <div class="tweet" *ngFor="let tweetObj of tweets">
+    <img src="assets/pp.png" alt="Profile Pic" class="profile-pic" />
+    <div class="tweet-content">
+      <div class="username">{{ tweetObj.user.username }}</div>
+      <div class="timestamp">
+        {{ getTimeSincePublished(tweetObj.published) }}
+      </div>
+      <div class="tweet-text">{{ tweetObj.content }}</div>
+    </div>
+    <div class="actions">
+      <i class="action-icon far fa-comment"></i>
+      <i class="action-icon fa fa-retweet"></i>
+      <i class="action-icon far fa-heart"></i>
+    </div>
+  </div>
+</div>

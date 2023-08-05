@@ -1,0 +1,39 @@
+<div class="explore-users-container">
+  <div *ngIf="isLoading" class="loader-container">
+    <div class="loader"></div>
+  </div>
+  <div *ngIf="!isLoading">
+    <div class="user-list-container">
+      <div *ngFor="let user of followings" class="user-card">
+        <div class="user-info">
+          <div class="username-and-circle">
+            <span class="username">{{ truncateText(user.username, 30) }}</span>
+            <div
+              class="status-circle"
+              [ngClass]="{ active: user.active, inactive: !user.active }"
+            ></div>
+          </div>
+          <p class="email">{{ truncateText(user.email, 30) }}</p>
+        </div>
+        <div class="follow-button-container">
+          <button class="follow-button" (click)="onUnfollowClick(user)">
+            Unfollow
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="pagination-buttons">
+      <button
+        class="prev-button"
+        [disabled]="isPrevButtonDisabled()"
+        (click)="onPrevClick()"
+      ></button>
+      <button
+        class="next-button"
+        [disabled]="isNextButtonDisabled()"
+        (click)="onNextClick()"
+      ></button>
+    </div>
+  </div>
+</div>
