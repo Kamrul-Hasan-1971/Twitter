@@ -23,7 +23,6 @@ export class TwitterApiService {
   ) {}
 
   login(email: string, password: string): Observable<any> {
-    console.log("login pass",password)
     const loginUrl = `${this.API_BASE_URL}${this.API_VERSION}${this.LOGIN_ENDPOINT}`;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const loginData = {
@@ -34,7 +33,6 @@ export class TwitterApiService {
   }
 
   signup(username: string, password: string, email: string): Observable<any> {
-    console.log("signup pass",password)
     const signupUrl = `${this.API_BASE_URL}${this.API_VERSION}${this.SIGNUP_ENDPOINT}`;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const signupData = {
