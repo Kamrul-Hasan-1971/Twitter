@@ -8,14 +8,19 @@
       <div class="form-group">
         <label for="email">Email</label>
         <input type="email" id="email" formControlName="email" autocomplete="off">
-        <div *ngIf="loginForm.get('email').invalid && loginForm.get('email').touched"
-            class="error-message">Please enter your email.</div>
+        <div *ngIf="isFieldInvalid('email') && loginForm.get('email').errors['required']" class="error-message">
+          Please enter an email address.
+        </div>
+        <div *ngIf="isFieldInvalid('email') && loginForm.get('email').errors['email']" class="error-message">
+          Please enter a valid email address.
+        </div>
       </div>
       <div class="form-group">
         <label for="password">Password</label>
         <input type="password" id="password" formControlName="password" autocomplete="off">
-        <div *ngIf="loginForm.get('password').invalid && loginForm.get('password').touched"
-            class="error-message">Please enter your password.</div>
+        <div *ngIf="isFieldInvalid('password')" class="error-message">
+          Please enter a password.
+        </div>
       </div>
       <button type="submit">Log in</button>
     </form>

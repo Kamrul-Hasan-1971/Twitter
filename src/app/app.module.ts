@@ -7,6 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AuthInterceptor } from './interceptors/auth/auth.interceptor';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [AppComponent],
@@ -16,6 +17,7 @@ import { AuthInterceptor } from './interceptors/auth/auth.interceptor';
     HttpClientModule,
     ReactiveFormsModule,
     AppRoutingModule,
+    MatSnackBarModule,
   ],
   providers: [
     {

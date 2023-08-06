@@ -4,25 +4,28 @@
       <img src="assets/twitter.png" alt="Twitter Logo">
     </div>
     <h2 class="register-title">Create your account</h2>
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
       <div class="form-group">
         <label for="username">Username</label>
         <input type="text" id="username" formControlName="username" autocomplete="off">
-        <div *ngIf="registerForm.get('username').invalid && registerForm.get('username').touched" class="error-message">
+        <div *ngIf="isFieldInvalid('username')" class="error-message">
           Please enter a username.
         </div>
       </div>
       <div class="form-group">
         <label for="email">Email</label>
         <input type="email" id="email" formControlName="email" autocomplete="off">
-        <div *ngIf="registerForm.get('email').invalid && registerForm.get('email').touched" class="error-message">
+        <div *ngIf="isFieldInvalid('email') && registerForm.get('email').errors['required']" class="error-message">
+          Please enter an email address.
+        </div>
+        <div *ngIf="isFieldInvalid('email') && registerForm.get('email').errors['email']" class="error-message">
           Please enter a valid email address.
         </div>
       </div>
       <div class="form-group">
         <label for="password">Password</label>
         <input type="password" id="password" formControlName="password" autocomplete="off">
-        <div *ngIf="registerForm.get('password').invalid && registerForm.get('password').touched" class="error-message">
+        <div *ngIf="isFieldInvalid('password')" class="error-message">
           Please enter a password (minimum 6 characters).
         </div>
       </div>

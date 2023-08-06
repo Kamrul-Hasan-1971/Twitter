@@ -1,10 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  AbstractControl,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TwitterApiService } from 'src/app/services/api/twitter-api.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
@@ -61,6 +56,16 @@ export class RegisterPageComponent implements OnInit {
           console.error('Registration failed:', error);
         }
       );
+    } else {
+      this.markAllFieldsAsTouched();
+    }
+  }
+
+  markAllFieldsAsTouched() {
+    for (const controlName in this.registerForm.controls) {
+      if (this.registerForm.controls.hasOwnProperty(controlName)) {
+        this.registerForm.controls[controlName].markAsTouched();
+      }
     }
   }
 
@@ -71,7 +76,6 @@ export class RegisterPageComponent implements OnInit {
       (control.touched || control.dirty || this.formSubmitted)
     );
   }
-
 
   navigateToLogIn(): void {
     this.router.navigate(['auth/login']);

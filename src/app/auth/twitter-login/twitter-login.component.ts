@@ -11,6 +11,7 @@ import { AuthService } from '../../services/auth/auth.service';
 })
 export class TwitterLoginComponent implements OnInit {
   loginForm: FormGroup;
+  formSubmitted: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -21,12 +22,13 @@ export class TwitterLoginComponent implements OnInit {
 
   ngOnInit() {
     this.loginForm = this.fb.group({
-      email: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
     });
   }
 
   onSubmit() {
+    this.formSubmitted = true;
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
       this.twitterApiService.login(email, password).subscribe(
@@ -39,7 +41,25 @@ export class TwitterLoginComponent implements OnInit {
           console.error('Login failed:', error);
         }
       );
+    } else {
+      this.markAllFieldsAsTouched();
     }
+  }
+
+  markAllFieldsAsTouched() {
+    for (const controlName in this.loginForm.controls) {
+      if (this.loginForm.controls.hasOwnProperty(controlName)) {
+        this.loginForm.controls[controlName].markAsTouched();
+      }
+    }
+  }
+
+  isFieldInvalid(fieldName: string): boolean {
+    const control = this.loginForm.get(fieldName);
+    return (
+      control.invalid &&
+      (control.touched || control.dirty || this.formSubmitted)
+    );
   }
 
   navigateToRegister(): void {
