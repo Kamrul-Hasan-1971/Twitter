@@ -1,6 +1,9 @@
 <!-- timeline.component.html -->
 <app-tweet (tweetCreated)="onTweetCreated($event)"></app-tweet>
-<div class="timeline-container">
+<div *ngIf="isLoading" class="loader-container">
+  <div class="loader"></div>
+</div>
+<div *ngIf="!isLoading" class="timeline-container">
   <div class="tweet" *ngFor="let tweetObj of tweets">
     <img src="assets/pp.png" alt="Profile Pic" class="profile-pic" />
     <div class="tweet-content">
@@ -16,4 +19,16 @@
       <i class="action-icon far fa-heart"></i>
     </div>
   </div>
+ </div>
+ <div *ngIf="tweets.length && !isLoading" class="pagination-buttons">
+  <button
+    class="prev-button"
+    [disabled]="isPrevButtonDisabled()"
+    (click)="onPrevClick()"
+  ></button>
+  <button
+    class="next-button"
+    [disabled]="isNextButtonDisabled()"
+    (click)="onNextClick()"
+  ></button>
 </div>

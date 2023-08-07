@@ -1,17 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TwitterApiService } from '../../services/api/twitter-api.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-twitter-login',
   templateUrl: './twitter-login.component.html',
   styleUrls: ['./twitter-login.component.scss'],
 })
-export class TwitterLoginComponent implements OnInit {
+export class TwitterLoginComponent implements OnInit, OnDestroy {
   loginForm: FormGroup;
   formSubmitted: boolean = false;
+  subscriptions : Subscription[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -31,7 +33,7 @@ export class TwitterLoginComponent implements OnInit {
     this.formSubmitted = true;
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
-      this.twitterApiService.login(email, password).subscribe(
+      this.subscriptions.push(this.twitterApiService.login(email, password).subscribe(
         (response) => {
           console.log('Login successful:', response);
           this.authService.setToken(response.token);
@@ -40,7 +42,7 @@ export class TwitterLoginComponent implements OnInit {
         (error) => {
           console.error('Login failed:', error);
         }
-      );
+      ));
     } else {
       this.markAllFieldsAsTouched();
     }
@@ -64,5 +66,11 @@ export class TwitterLoginComponent implements OnInit {
 
   navigateToRegister(): void {
     this.router.navigate(['auth/register']);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription=>{
+      subscription.unsubscribe();
+    })
   }
 }

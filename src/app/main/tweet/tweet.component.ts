@@ -1,16 +1,18 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { Tweet } from '../timeline/timeline.component';
 import { TwitterApiService } from 'src/app/services/api/twitter-api.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-tweet',
   templateUrl: './tweet.component.html',
   styleUrls: ['./tweet.component.scss'],
 })
-export class TweetComponent {
+export class TweetComponent implements OnDestroy {
   tweetText: string = '';
   charCount: number = 160;
   @Output() tweetCreated = new EventEmitter<Tweet>();
+  subscriptions : Subscription[] = [];
 
   constructor(private twitterApiService: TwitterApiService) {}
 
@@ -27,7 +29,7 @@ export class TweetComponent {
       const tweetText = this.tweetText;
       this.tweetText = '';
       this.charCount = 160;
-      this.twitterApiService.createTweet(tweetText).subscribe(
+      this.subscriptions.push(this.twitterApiService.createTweet(tweetText).subscribe(
         (response: any) => {
           console.log('Tweet created:', response.tweet);
           this.tweetCreated.emit(response.tweet);
@@ -35,7 +37,13 @@ export class TweetComponent {
         (error) => {
           console.error('Error creating tweet:', error);
         }
-      );
+      ));
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription=>{
+      subscription.unsubscribe();
+    })
   }
 }

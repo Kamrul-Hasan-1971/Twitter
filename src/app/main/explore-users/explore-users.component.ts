@@ -1,17 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TwitterApiService } from '../../services/api/twitter-api.service';
-import { forkJoin, map } from 'rxjs';
+import { Subscription, forkJoin, map } from 'rxjs';
 
 @Component({
   selector: 'app-explore-users',
   templateUrl: './explore-users.component.html',
   styleUrls: ['./explore-users.component.scss'],
 })
-export class ExploreUsersComponent implements OnInit {
+export class ExploreUsersComponent implements OnInit, OnDestroy {
   users: any[] = [];
   currentPage: number = 1;
   pageSize: number = 30;
   isLoading: boolean = false;
+  subscriptions: Subscription[] = [];
 
   constructor(private twitterApiService: TwitterApiService) {}
 
@@ -21,7 +22,7 @@ export class ExploreUsersComponent implements OnInit {
 
   getUsers(): void {
     this.isLoading = true;
-    forkJoin([
+    const subscription = forkJoin([
       this.twitterApiService.getUsers(this.currentPage, this.pageSize),
       this.twitterApiService.getFollowings(1, 1000),
     ])
@@ -45,6 +46,7 @@ export class ExploreUsersComponent implements OnInit {
           console.error('Failed to get users and followings:', error);
         }
       );
+    this.subscriptions.push(subscription);
   }
 
   onNextClick(): void {
@@ -88,5 +90,11 @@ export class ExploreUsersComponent implements OnInit {
       return text.substring(0, maxLength) + '...';
     }
     return text;
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => {
+      subscription.unsubscribe();
+    });
   }
 }

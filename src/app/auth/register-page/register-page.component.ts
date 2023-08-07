@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { TwitterApiService } from 'src/app/services/api/twitter-api.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 
@@ -9,9 +10,10 @@ import { AuthService } from 'src/app/services/auth/auth.service';
   templateUrl: './register-page.component.html',
   styleUrls: ['./register-page.component.scss'],
 })
-export class RegisterPageComponent implements OnInit {
+export class RegisterPageComponent implements OnInit, OnDestroy {
   registerForm: FormGroup;
   formSubmitted = false;
+  subscriptions : Subscription[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -33,7 +35,7 @@ export class RegisterPageComponent implements OnInit {
 
     if (this.registerForm.valid) {
       const { username, password, email } = this.registerForm.value;
-      this.twitterApiService.signup(username, password, email).subscribe(
+      this.subscriptions.push(this.twitterApiService.signup(username, password, email).subscribe(
         (response) => {
           console.log(
             'Registration successful:',
@@ -42,7 +44,7 @@ export class RegisterPageComponent implements OnInit {
             password
           );
 
-          this.twitterApiService.login(email, password).subscribe(
+          this.subscriptions.push(this.twitterApiService.login(email, password).subscribe(
             (loginResponse) => {
               this.authService.setToken(loginResponse.token);
               this.router.navigate(['/home']);
@@ -50,12 +52,12 @@ export class RegisterPageComponent implements OnInit {
             (loginError) => {
               console.error('Login failed:', loginError);
             }
-          );
+          ));
         },
         (error) => {
           console.error('Registration failed:', error);
         }
-      );
+      ));
     } else {
       this.markAllFieldsAsTouched();
     }
@@ -79,5 +81,11 @@ export class RegisterPageComponent implements OnInit {
 
   navigateToLogIn(): void {
     this.router.navigate(['auth/login']);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription=>{
+      subscription.unsubscribe();
+    })
   }
 }
