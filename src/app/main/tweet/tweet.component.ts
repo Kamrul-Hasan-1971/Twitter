@@ -20,6 +20,12 @@ export class TweetComponent implements OnDestroy {
     this.charCount = 160 - this.tweetText.length;
   }
 
+  onKeyDown(event: KeyboardEvent): void {
+    if (this.charCount <= 0 && ![37, 38, 39, 40, 8, 46].includes(event.keyCode)) {
+      event.preventDefault();
+    }
+  }
+
   canTweet(): boolean {
     return this.tweetText.trim() !== '' && this.charCount >= 0;
   }

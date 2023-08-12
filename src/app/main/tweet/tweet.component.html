@@ -4,6 +4,7 @@
     [(ngModel)]="tweetText"
     placeholder="What's happening?"
     (input)="onInputChange()"
+    (keydown)="onKeyDown($event)"
   ></textarea>
   <div class="tweet-footer">
     <p class="char-count">{{ charCount }}</p>
