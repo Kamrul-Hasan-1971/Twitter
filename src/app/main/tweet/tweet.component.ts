@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
-import { Tweet } from '../timeline/timeline.component';
 import { TwitterApiService } from 'src/app/services/api/twitter-api.service';
 import { Subscription } from 'rxjs';
+import { Tweet } from 'src/app/interfaces/tweet.interface';
 
 @Component({
   selector: 'app-tweet',

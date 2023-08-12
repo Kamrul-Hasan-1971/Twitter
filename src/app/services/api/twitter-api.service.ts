@@ -16,7 +16,8 @@ export class TwitterApiService {
   private FOLLOW_ENDPOINT = '/follow';
   private UNFOLLOW_ENDPOINT = '/unfollow';
   private USERS_ENDPOINT = '/users';
-  private TIMELINE = '/timeline'
+  private TIMELINE = '/timeline';
+  private MY_TWEETS = '/my-tweets';
 
   constructor(
     private http: HttpClient,
@@ -113,6 +114,13 @@ export class TwitterApiService {
 
   getTimelinePosts(page: number, size: number): Observable<any> {
     const timelineUrl = `${this.API_BASE_URL}${this.API_VERSION}${this.TIMELINE}?page=${page}&size=${size}`;
+    return this.http.get(timelineUrl).pipe(
+      catchError((error: HttpErrorResponse) => this.handleError(error))
+    );
+  }
+
+  getMyTweets(page: number, size: number): Observable<any> {
+    const timelineUrl = `${this.API_BASE_URL}${this.API_VERSION}${this.MY_TWEETS}?page=${page}&size=${size}`;
     return this.http.get(timelineUrl).pipe(
       catchError((error: HttpErrorResponse) => this.handleError(error))
     );

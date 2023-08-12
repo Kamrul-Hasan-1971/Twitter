@@ -1,0 +1,12 @@
+<div *ngIf="tweetsLength && !isLoading" class="pagination-buttons">
+  <button
+    class="prev-button"
+    [disabled]="isPrevButtonDisabled"
+    (click)="onPrevClick()"
+  ></button>
+  <button
+    class="next-button"
+    [disabled]="isNextButtonDisabled"
+    (click)="onNextClick()"
+  ></button>
+</div>

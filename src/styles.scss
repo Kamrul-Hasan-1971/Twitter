@@ -1,16 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
 
-body, html {
+body,
+html {
   margin: 0;
   padding: 0;
   height: 100vh;
   width: 100vw;
   background-color: #f5f8fa;
-  font-family: 'Roboto', sans-serif
+  font-family: "Roboto", sans-serif;
   //align-items: center;
 }
-
-
 
 .auth-container {
   display: flex;
@@ -18,7 +17,7 @@ body, html {
   align-items: center;
   width: 100vw;
   height: 100vh;
-  background-image: url('/assets/bg-2.jpg');
+  background-image: url("/assets/bg-2.jpg");
   //background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -26,11 +25,51 @@ body, html {
 
 /* Add global styles for other components here */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
 .error-toast {
   background-color: #d32f2f;
   color: #fff;
+}
+
+@mixin button-styles {
+  background-color: $twitter-blue;
+  color: #fff;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+
+  &:before {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    font-size: 14px;
+    margin-right: 5px;
+  }
+
+  &:hover {
+    background-color: $twitter-blue-dark;
+    &:before {
+      color: #fff;
+    }
+  }
+
+  $twitter-blue: #1da1f2;
+  $twitter-blue-dark: #0f81c7;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    &:before {
+      color: #ccc;
+    }
+  }
 }

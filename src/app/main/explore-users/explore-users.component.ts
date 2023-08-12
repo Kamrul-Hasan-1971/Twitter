@@ -85,13 +85,6 @@ export class ExploreUsersComponent implements OnInit, OnDestroy {
     return this.currentPage === 1;
   }
 
-  truncateText(text: string, maxLength: number): string {
-    if (text.length > maxLength) {
-      return text.substring(0, maxLength) + '...';
-    }
-    return text;
-  }
-
   ngOnDestroy(): void {
     this.subscriptions.forEach((subscription) => {
       subscription.unsubscribe();

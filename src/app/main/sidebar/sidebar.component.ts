@@ -18,14 +18,10 @@ export class SidebarComponent implements OnInit {
   selectedMenuItem: number = 1;
   menuItems: MenuItem[] = [
     { id: 1, icon: 'fas fa-home', label: 'Home', link: '/home' },
-    {
-      id: 2,
-      icon: 'fas fa-hashtag',
-      label: 'Explore-users',
-      link: '/explore-users',
-    },
-    { id: 3, icon: 'fas fa-users', label: 'Following', link: '/following' },
-    { id: 4, icon: 'fas fa-sign-out-alt', label: 'Logout', link: '/logout' },
+    { id: 2, icon: 'far fa-comment', label: 'My Tweets', link: '/my-tweets' },
+    { id: 3, icon: 'fas fa-hashtag', label: 'Explore-users', link: '/explore-users'},
+    { id: 4, icon: 'fas fa-users', label: 'Following', link: '/following' },
+    { id: 5, icon: 'fas fa-sign-out-alt', label: 'Logout', link: '/logout' },
   ];
 
   constructor(private router: Router, private authService: AuthService) {}
@@ -41,7 +37,7 @@ export class SidebarComponent implements OnInit {
   }
 
   navigateTo(menuItem: MenuItem): void {
-    if (menuItem.id === 4) {
+    if (menuItem.id === 5) {
       this.authService.logout();
     } else {
       this.selectedMenuItem = menuItem.id;

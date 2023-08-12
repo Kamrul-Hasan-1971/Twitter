@@ -17,6 +17,11 @@ import { TimelineComponent } from './timeline/timeline.component';
 import { TrendsComponent } from './trends/trends.component';
 import { TweetComponent } from './tweet/tweet.component';
 import { AuthInterceptor } from '../interceptors/auth/auth.interceptor';
+import { MyTweetsComponent } from './my-tweets/my-tweets.component';
+import { LoaderComponent } from '../common/loader/loader.component';
+import { PaginatorComponent } from '../common/paginator/paginator.component';
+import { TruncatePipe } from '../pipes/truncate.pipe';
+
 
 @NgModule({
   declarations: [
@@ -27,6 +32,10 @@ import { AuthInterceptor } from '../interceptors/auth/auth.interceptor';
     MainComponent,
     ExploreUsersComponent,
     TweetComponent,
+    MyTweetsComponent,
+    LoaderComponent,
+    PaginatorComponent,
+    TruncatePipe
   ],
   imports: [CommonModule, MainRoutingModule, MatListModule, FormsModule],
   providers: [
