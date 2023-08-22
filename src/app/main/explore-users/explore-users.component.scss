@@ -186,3 +186,10 @@
 .inactive {
   background-color: #f44336;
 }
+
+.app-loader-container {
+  height: 87vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

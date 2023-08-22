@@ -1,17 +1,19 @@
 <div class="explore-users-container">
-  <app-loader [isLoading]="isLoading"></app-loader>
+  <div *ngIf="isLoading" class="app-loader-container">
+    <app-loader></app-loader>
+  </div>
   <div *ngIf="!isLoading">
     <div class="user-list-container">
       <div *ngFor="let user of followings" class="user-card">
         <div class="user-info">
           <div class="username-and-circle">
-            <span class="username">{{ user.username| truncate: 30 }}</span>
+            <span class="username">{{ user.username | truncate : 30 }}</span>
             <div
               class="status-circle"
               [ngClass]="{ active: user.active, inactive: !user.active }"
             ></div>
           </div>
-          <p class="email">{{ user.email | truncate:30 }}</p>
+          <p class="email">{{ user.email | truncate : 30 }}</p>
         </div>
         <div class="follow-button-container">
           <button class="follow-button" (click)="onUnfollowClick(user)">
@@ -33,6 +35,8 @@
         (click)="onNextClick()"
       ></button>
     </div>
-    <div *ngIf="followings.length == 0" class="no-followings"><h2>No followings</h2></div>
+    <div *ngIf="followings.length == 0" class="no-followings">
+      <h2>No followings</h2>
+    </div>
   </div>
 </div>

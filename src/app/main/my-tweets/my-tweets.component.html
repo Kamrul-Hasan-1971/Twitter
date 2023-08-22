@@ -1,4 +1,6 @@
-<app-loader [isLoading]="isLoading"></app-loader>
+<div *ngIf="isLoading" class="app-loader-container">
+  <app-loader></app-loader>
+</div>
 <div *ngIf="!isLoading" class="my-tweets-container">
   <div class="tweet" *ngFor="let tweetObj of tweets">
     <img src="assets/pp.png" alt="Profile Pic" class="profile-pic" />
@@ -6,7 +8,7 @@
       <div class="tweet-upper-row">
         <div>
           <div class="username">
-            {{ tweetObj.user.username| truncate: 30 }}
+            {{ tweetObj.user.username | truncate : 30 }}
           </div>
           <div class="timestamp">
             {{ utilityService.getTimeSincePublished(tweetObj.published) }}
@@ -24,7 +26,7 @@
     </div>
   </div>
 </div>
- <div *ngIf="tweets.length && !isLoading" class="pagination-buttons">
+<div *ngIf="tweets.length && !isLoading" class="pagination-buttons">
   <button
     class="prev-button"
     [disabled]="isPrevButtonDisabled()"

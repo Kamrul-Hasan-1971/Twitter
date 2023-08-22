@@ -1,5 +1,7 @@
 <div class="explore-users-container">
-  <app-loader [isLoading]="isLoading"></app-loader>
+  <div *ngIf="isLoading" class="app-loader-container">
+    <app-loader></app-loader>
+  </div>
   <div *ngIf="!isLoading">
     <div class="user-list-container">
       <div *ngFor="let user of users" class="user-card">
@@ -11,7 +13,7 @@
               [ngClass]="{ active: user.active, inactive: !user.active }"
             ></div>
           </div>
-          <p class="email">{{ user.email | truncate: 30 }}</p>
+          <p class="email">{{ user.email | truncate : 30 }}</p>
         </div>
         <div class="follow-button-container">
           <button

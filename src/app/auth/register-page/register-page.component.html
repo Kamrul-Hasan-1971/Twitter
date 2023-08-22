@@ -29,7 +29,10 @@
           Please enter a password (minimum 6 characters).
         </div>
       </div>
-      <button type="submit">Sign up</button>
+      <button type="submit" [disabled]="registerForm.invalid || isSigningUp">
+        {{ isSigningUp ? '' : 'Sign up' }}
+        <app-loader style="--spinner-size: 22px;" *ngIf="isSigningUp"></app-loader>
+      </button>
     </form>
     <div class="login-link">
       <span>Already have an account?</span>

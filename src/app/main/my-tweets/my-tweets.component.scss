@@ -144,3 +144,9 @@ $twitter-blue-dark: #0f81c7;
   content: "\f061";
 }
 
+.app-loader-container {
+  height: 85vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

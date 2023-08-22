@@ -1,6 +1,7 @@
-
 <app-tweet (tweetCreated)="onTweetCreated($event)"></app-tweet>
-<app-loader [isLoading]="isLoading"></app-loader>
+<div *ngIf="isLoading" class="app-loader-container">
+  <app-loader></app-loader>
+</div>
 <div *ngIf="!isLoading" class="timeline-container">
   <div class="tweet" *ngFor="let tweetObj of tweets">
     <img src="assets/pp.png" alt="Profile Pic" class="profile-pic" />

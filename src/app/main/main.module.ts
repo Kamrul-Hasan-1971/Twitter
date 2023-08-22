@@ -18,9 +18,9 @@ import { TrendsComponent } from './trends/trends.component';
 import { TweetComponent } from './tweet/tweet.component';
 import { AuthInterceptor } from '../interceptors/auth/auth.interceptor';
 import { MyTweetsComponent } from './my-tweets/my-tweets.component';
-import { LoaderComponent } from '../common/loader/loader.component';
 import { PaginatorComponent } from '../common/paginator/paginator.component';
 import { TruncatePipe } from '../pipes/truncate.pipe';
+import { SharedModule } from '../shared/shared.module';
 
 
 @NgModule({
@@ -33,11 +33,10 @@ import { TruncatePipe } from '../pipes/truncate.pipe';
     ExploreUsersComponent,
     TweetComponent,
     MyTweetsComponent,
-    LoaderComponent,
     PaginatorComponent,
     TruncatePipe
   ],
-  imports: [CommonModule, MainRoutingModule, MatListModule, FormsModule],
+  imports: [CommonModule, MainRoutingModule, MatListModule, FormsModule, SharedModule],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,

@@ -14,6 +14,7 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
   registerForm: FormGroup;
   formSubmitted = false;
   subscriptions : Subscription[] = [];
+  isSigningUp : boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -34,6 +35,7 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
     this.formSubmitted = true;
 
     if (this.registerForm.valid) {
+      this.isSigningUp = true;
       const { username, password, email } = this.registerForm.value;
       this.subscriptions.push(this.twitterApiService.signup(username, password, email).subscribe(
         (response) => {
@@ -46,15 +48,18 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
 
           this.subscriptions.push(this.twitterApiService.login(email, password).subscribe(
             (loginResponse) => {
+              this.isSigningUp = false;
               this.authService.setToken(loginResponse.token);
               this.router.navigate(['/home']);
             },
             (loginError) => {
+              this.isSigningUp = false;
               console.error('Login failed:', loginError);
             }
           ));
         },
         (error) => {
+          this.isSigningUp = false;
           console.error('Registration failed:', error);
         }
       ));

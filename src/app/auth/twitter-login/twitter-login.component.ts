@@ -14,6 +14,7 @@ export class TwitterLoginComponent implements OnInit, OnDestroy {
   loginForm: FormGroup;
   formSubmitted: boolean = false;
   subscriptions : Subscription[] = [];
+  isLoggingIn: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -32,14 +33,17 @@ export class TwitterLoginComponent implements OnInit, OnDestroy {
   onSubmit() {
     this.formSubmitted = true;
     if (this.loginForm.valid) {
+      this.isLoggingIn = true;
       const { email, password } = this.loginForm.value;
       this.subscriptions.push(this.twitterApiService.login(email, password).subscribe(
         (response) => {
+          this.isLoggingIn = false;
           console.log('Login successful:', response);
           this.authService.setToken(response.token);
           this.router.navigate(['/home']);
         },
         (error) => {
+          this.isLoggingIn = false;
           console.error('Login failed:', error);
         }
       ));
