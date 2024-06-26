@@ -1,0 +1,60 @@
+.error-container {
+  background-color: #fff; // Adjusted background color
+}
+
+.error-title {
+  background: #1da1f2;
+  color: #fff;
+  padding: 6px 12px;
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.dialog-actions {
+  justify-content: flex-end;
+  margin-bottom: 6px;
+  margin-right: 6px;
+}
+
+.error-content-container {
+  padding-bottom: 0px;
+}
+
+.okay-button {
+  background-color: #1da1f2;
+  color: #fff!important;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+  &:hover {
+    background-color: #0d8ed7;
+  }
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.retry-button {
+  background-color: #964435; // Adjusted background color
+  color: #fff !important;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+  &:hover {
+    background-color: darkred;
+  }
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.error-message {
+  white-space: pre-line;
+}

@@ -3,40 +3,47 @@
     <div class="logo">
       <img src="assets/twitter.png" alt="Twitter Logo">
     </div>
-    <h2 class="register-title">Create your account</h2>
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
+    <h2 class="register-title">TwitClone</h2>
+    <form [formGroup]="registerForm" (ngSubmit)="registerWithEmail()" novalidate>
       <div class="form-group">
         <label for="username">Username</label>
         <input type="text" id="username" formControlName="username" autocomplete="off">
-        <div *ngIf="isFieldInvalid('username')" class="error-message">
+        <!-- <div *ngIf="isFieldInvalid('username')" class="error-message">
           Please enter a username.
-        </div>
+        </div> -->
       </div>
       <div class="form-group">
         <label for="email">Email</label>
         <input type="email" id="email" formControlName="email" autocomplete="off">
-        <div *ngIf="isFieldInvalid('email') && registerForm.get('email').errors['required']" class="error-message">
+        <!-- <div *ngIf="isFieldInvalid('email') && registerForm.get('email').errors['required']" class="error-message">
           Please enter an email address.
-        </div>
-        <div *ngIf="isFieldInvalid('email') && registerForm.get('email').errors['email']" class="error-message">
+        </div> -->
+        <!-- <div *ngIf="isFieldInvalid('email') && registerForm.get('email').errors['email']" class="error-message">
           Please enter a valid email address.
-        </div>
+        </div> -->
       </div>
       <div class="form-group">
         <label for="password">Password</label>
         <input type="password" id="password" formControlName="password" autocomplete="off">
-        <div *ngIf="isFieldInvalid('password')" class="error-message">
+        <!-- <div *ngIf="isFieldInvalid('password')" class="error-message">
           Please enter a password (minimum 6 characters).
-        </div>
+        </div> -->
       </div>
-      <button type="submit" [disabled]="registerForm.invalid || isSigningUp">
-        {{ isSigningUp ? '' : 'Sign up' }}
-        <app-loader style="--spinner-size: 22px;" *ngIf="isSigningUp"></app-loader>
+      <div class="form-group">
+        <label for="confirm-password">Confirm Password</label>
+        <input type="password" id="confirmPassword" formControlName="confirmPassword" autocomplete="off">
+        <!-- <div *ngIf="isFieldInvalid('password')" class="error-message">
+          Please enter a password (minimum 6 characters).
+        </div> -->
+      </div>
+      <button type="submit" [disabled]="registrationLoading">
+        {{ registrationLoading ? '' : 'Sign up' }}
+        <app-loader style="--spinner-size: 22px;" *ngIf="registrationLoading"></app-loader>
       </button>
     </form>
     <div class="login-link">
       <span>Already have an account?</span>
-      <a class="login-button" (click)="navigateToLogIn()">Log in</a>
+      <a class="login-button" (click)="navigateToLogIn()">Sign in</a>
     </div>
   </div>
 </div>

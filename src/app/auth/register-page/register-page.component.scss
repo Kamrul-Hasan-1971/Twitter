@@ -27,7 +27,7 @@
 }
 
 .logo img {
-  width: 50px;
+  //width: 50px;
   height: 50px;
 }
 
@@ -107,7 +107,7 @@ button:hover {
 .login-link {
   font-size: 14px;
   color: #1da1f2;
-  margin-top: 20px;
+  margin-top: 12px;
 }
 
 .login-link a {
@@ -118,4 +118,5 @@ button:hover {
 
 .login-button {
   cursor: pointer;
+  margin-left: 4px;
 }
