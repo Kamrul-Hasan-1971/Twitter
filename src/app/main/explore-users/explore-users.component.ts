@@ -8,6 +8,7 @@ import { Subscription, forkJoin, map } from 'rxjs';
   styleUrls: ['./explore-users.component.scss'],
 })
 export class ExploreUsersComponent implements OnInit, OnDestroy {
+  
   users: any[] = [];
   currentPage: number = 1;
   pageSize: number = 30;
