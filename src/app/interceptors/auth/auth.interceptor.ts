@@ -1,27 +1,34 @@
-// auth.interceptor.ts
 import { Injectable } from '@angular/core';
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {
+  HttpInterceptor,
+  HttpRequest,
+  HttpHandler,
+  HttpEvent,
+} from '@angular/common/http';
+import { Observable, from } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth/auth.service';
-
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-
   constructor(private authService: AuthService) {}
 
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const token = this.authService.getToken();
-    if (token && !this.authService.isTokenExpired()) {
-      req = req.clone({
-        setHeaders: {
-          'X-Jwt-Token': `Bearer ${token}`
+  intercept(
+    request: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
+    return from(this.authService.getToken()).pipe(
+      mergeMap((idToken) => {
+        if (idToken) {
+          request = request.clone({
+            setHeaders: {
+              Authorization: `Bearer ${idToken}`,
+            },
+          });
         }
-      });
-    }else{
-      if(token) this.authService.logout();
-    }
 
-    return next.handle(req);
+        return next.handle(request);
+      })
+    );
   }
 }

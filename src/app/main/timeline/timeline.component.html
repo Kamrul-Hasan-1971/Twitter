@@ -12,7 +12,7 @@
             {{ tweetObj.user.username | truncate : 30 }}
           </div>
           <div class="timestamp">
-            {{ utilityService.getTimeSincePublished(tweetObj.published) }}
+            {{ utilityService.getTimeSincePublished(tweetObj.publishedTime) }}
           </div>
         </div>
         <div>

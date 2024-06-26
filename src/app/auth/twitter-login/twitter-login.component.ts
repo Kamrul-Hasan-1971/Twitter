@@ -2,9 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 // import { TwitterApiService } from '../../services/api/twitter-api.service';
 import { Router } from '@angular/router';
-// import { AuthService } from '../../services/auth/auth.service';
+import { AuthService } from '../../services/auth/auth.service';
 import { Subscription } from 'rxjs';
-import { AuthService as AuthServiceV2 } from '../../services/auth copy/auth.service'
+//import { AuthService as AuthServiceV2 } from '../../services/auth copy/auth.service'
 import { FirebaseError } from 'firebase/app';
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorDialogComponent } from 'src/app/common/error-dialog/error-dialog.component';
@@ -25,8 +25,8 @@ export class TwitterLoginComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     // private twitterApiService: TwitterApiService,
-    // private authService: AuthService,
-    private authServiceV2: AuthServiceV2,
+    private authService: AuthService,
+    //private authServiceV2: AuthServiceV2,
     private router: Router,
     private dialog: MatDialog,
   ) {}
@@ -48,7 +48,7 @@ export class TwitterLoginComponent implements OnInit, OnDestroy {
     const password = this.loginForm.value.password;
 
     if (this.loginForm.valid) {
-      this.authServiceV2
+      this.authService
         .loginWithEmail(email, password)
         .then((userAuthCredential) => {
           //console.log('Successfully logged in.', userAuthCredential);
@@ -88,7 +88,7 @@ export class TwitterLoginComponent implements OnInit, OnDestroy {
 
   loginWithGoogle() {
     this.loading = true;
-    this.authServiceV2
+    this.authService
       .loginWithGoogle()
       .then((userAuthCredential) => {
         console.log('Successfully logged in.', userAuthCredential);

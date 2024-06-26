@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { TwitterApiService } from 'src/app/services/api/twitter-api.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { AuthService as  AuthServiceV2} from 'src/app/services/auth copy/auth.service';
+//import { AuthService as  AuthServiceV2} from 'src/app/services/auth copy/auth.service';
 import { passwordMatchValidator } from 'src/app/validators/validators';
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorDialogComponent } from 'src/app/common/error-dialog/error-dialog.component';
@@ -26,7 +26,7 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
     private twitterApiService: TwitterApiService,
     private router: Router,
     private authService: AuthService,
-    private authServiceV2: AuthServiceV2,
+    //private authServiceV2: AuthServiceV2,
     private dialog: MatDialog,
   ) {}
 
@@ -53,7 +53,7 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
     const email = this.registerForm.value.email;
     const password = this.registerForm.value.password;
     if (this.registerForm.valid) {
-      this.authServiceV2
+      this.authService
         .registrationWithEmail(email, password)
         .then(() => {
           this.registrationLoading = false;

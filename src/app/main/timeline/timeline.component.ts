@@ -11,11 +11,12 @@ import { UtilityService } from 'src/app/services/utility/utility.service';
   styleUrls: ['./timeline.component.scss'],
 })
 export class TimelineComponent implements OnInit, OnDestroy {
-  tweets: any[] = [];
+  tweets: Tweet[] = [];
   currentPage = 1;
   pageSize = 30;
   isLoading = false;
   subscriptions: Subscription[] = [];
+  lastKey: number;
 
   constructor(
     private twitterApiService: TwitterApiService,
@@ -30,10 +31,13 @@ export class TimelineComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.subscriptions.push(
       this.twitterApiService
-        .getTimelinePosts(this.currentPage, this.pageSize)
+        .getTimelinePosts(this.lastKey, this.pageSize)
         .subscribe(
           (response) => {
-            this.tweets = response.timeline;
+            this.tweets = response;
+            if(this.tweets && this.tweets.length) {
+              this.lastKey = this.tweets[this.tweets.length-1].publishedTime;
+            }
             this.isLoading = false;
           },
           (error) => {

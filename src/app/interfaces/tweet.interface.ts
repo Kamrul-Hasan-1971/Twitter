@@ -1,12 +1,12 @@
 export interface Tweet {
-  id: number;
+  id: string;
   username: string;
-  timestamp: string;
+  publishedTime: number;
   content: string;
   user: {
     active: boolean;
     email: string;
-    id: number;
+    id: string;
     username: string;
   };
 }

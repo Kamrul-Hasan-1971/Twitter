@@ -1,9 +1,12 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable, catchError, map, throwError } from 'rxjs';
 import { UtilityService } from '../utility/utility.service';
-import { AuthService } from '../auth/auth.service';
+//import { AuthService } from '../auth/auth.service';
 import { ToastService } from 'src/app/services/toast/toast.service';
+//import { AngularFireDatabase } from '@angular/fire/compat/database';
+import { Tweet } from 'src/app/interfaces/tweet.interface';
+import { CollectionReference, DocumentData, Firestore, QueryConstraint, collection, doc, getDocs, limit, orderBy, query, setDoc, startAfter } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -11,8 +14,6 @@ import { ToastService } from 'src/app/services/toast/toast.service';
 export class TwitterApiService {
   private API_BASE_URL = 'https://missingdata.pythonanywhere.com';
   private API_VERSION = '';
-  private LOGIN_ENDPOINT = '/login';
-  private SIGNUP_ENDPOINT = '/signup';
   private FOLLOW_ENDPOINT = '/follow';
   private UNFOLLOW_ENDPOINT = '/unfollow';
   private USERS_ENDPOINT = '/users';
@@ -21,10 +22,29 @@ export class TwitterApiService {
 
   constructor(
     private http: HttpClient,
-    private authService: AuthService,
+    //private authService: AuthService,
     private utilityService: UtilityService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private firestore: Firestore
   ) {}
+
+  getTimelinePosts(lastKey?: number, pageSize: number = 10): Observable<Tweet[]> {
+    let tweetsRef: CollectionReference<DocumentData> = collection(this.firestore, 'tweets');
+debugger
+    let firestoreQuery: QueryConstraint[] = [orderBy('publishedTime', 'desc'), limit(pageSize)];
+    if (lastKey) {
+      firestoreQuery = [orderBy('publishedTime', 'desc'), startAfter(lastKey), limit(pageSize)];
+    }
+
+    return new Observable<Tweet[]>((observer) => {
+      getDocs(query(tweetsRef, ...firestoreQuery)).then((snapshot) => {
+        const tweets = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Tweet));
+        observer.next(tweets);
+      }).catch((error) => {
+        observer.error(error);
+      });
+    });
+  }
 
   private handleError(error: any) {
     let errorMessage = 'An unknown error occurred';
@@ -37,35 +57,6 @@ export class TwitterApiService {
     this.toastService.showError(errorMessage);
 
     return throwError(errorMessage);
-  }
-
-  login(email: string, password: string): Observable<any> {
-    const loginUrl = `${this.API_BASE_URL}${this.API_VERSION}${this.LOGIN_ENDPOINT}`;
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    const loginData = {
-      email: email,
-      password: this.utilityService.hashPassword(password),
-    };
-    return this.http.post(loginUrl, loginData, { headers }).pipe(
-      catchError((error: HttpErrorResponse) => this.handleError(error))
-    );
-  }
-
-  signup(username: string, password: string, email: string): Observable<any> {
-    const signupUrl = `${this.API_BASE_URL}${this.API_VERSION}${this.SIGNUP_ENDPOINT}`;
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    const signupData = {
-      username: username,
-      email: email,
-      password: this.utilityService.hashPassword(password),
-    };
-    return this.http.post(signupUrl, signupData, { headers }).pipe(
-      catchError((error: HttpErrorResponse) => this.handleError(error))
-    );
-  }
-
-  logout(): void {
-    this.authService.removeToken();
   }
 
   getFollowings(page: number, size: number): Observable<any> {
@@ -112,12 +103,12 @@ export class TwitterApiService {
     );
   }
 
-  getTimelinePosts(page: number, size: number): Observable<any> {
-    const timelineUrl = `${this.API_BASE_URL}${this.API_VERSION}${this.TIMELINE}?page=${page}&size=${size}`;
-    return this.http.get(timelineUrl).pipe(
-      catchError((error: HttpErrorResponse) => this.handleError(error))
-    );
-  }
+  // getTimelinePosts(page: number, size: number): Observable<any> {
+  //   const timelineUrl = `${this.API_BASE_URL}${this.API_VERSION}${this.TIMELINE}?page=${page}&size=${size}`;
+  //   return this.http.get(timelineUrl).pipe(
+  //     catchError((error: HttpErrorResponse) => this.handleError(error))
+  //   );
+  // }
 
   getMyTweets(page: number, size: number): Observable<any> {
     const timelineUrl = `${this.API_BASE_URL}${this.API_VERSION}${this.MY_TWEETS}?page=${page}&size=${size}`;

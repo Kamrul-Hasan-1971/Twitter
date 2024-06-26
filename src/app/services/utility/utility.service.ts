@@ -12,7 +12,7 @@ export class UtilityService {
     return hashedPassword;
   }
 
-  getTimeSincePublished(published: string): string {
+  getTimeSincePublished(published: number): string {
     const now = new Date();
     const publishedDate = new Date(published);
     const elapsedMinutes = Math.floor(

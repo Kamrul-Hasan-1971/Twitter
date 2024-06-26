@@ -25,10 +25,10 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { provideFirebaseApp, getApp, initializeApp } from '@angular/fire/app';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+// import { provideDatabase, getDatabase } from '@angular/fire/database';
 import { getStorage, provideStorage } from '@angular/fire/storage';
 import { environment } from 'src/environments/environment';
 import { ErrorDialogComponent } from './common/error-dialog/error-dialog.component';
-
 @NgModule({
   declarations: [AppComponent, ErrorDialogComponent],
   imports: [
