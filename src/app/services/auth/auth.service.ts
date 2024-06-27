@@ -116,6 +116,14 @@ export class AuthService {
       : '';
   }
 
+  getUserId(): string {
+    return this.currentUser?.uid || '';
+  }
+
+  getUserName(): string{
+    return 'Kamrul'; //TODO: temporary
+  }
+
   get isAuthenticated(): boolean {
     return this.auth.currentUser !== null;
   }

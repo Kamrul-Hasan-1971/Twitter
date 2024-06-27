@@ -1,45 +1,14 @@
 // Variables
 $twitter-blue: #1da1f2;
 $twitter-blue-dark: #0f81c7;
+$delete-red: #e0245e;
 
-// Shared Button Styles
-@mixin button-styles {
-  background-color: $twitter-blue;
-  color: #fff;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease-in-out;
-
-  &:before {
-    font-family: "Font Awesome 5 Free";
-    font-weight: 900;
-    font-size: 14px;
-    margin-right: 5px;
-  }
-
-  &:hover {
-    background-color: $twitter-blue-dark;
-    &:before {
-      color: #fff;
-    }
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    &:before {
-      color: #ccc;
-    }
-  }
-}
 
 // Main Styles
 .timeline-container {
   width: 100%;
   max-width: 600px;
-  max-height: 64vh;
+  max-height: 73vh;
   margin-bottom: 20px;
   margin-top: 20px;
   font-family: "Roboto", sans-serif;
@@ -57,11 +26,6 @@ $twitter-blue-dark: #0f81c7;
   &::-webkit-scrollbar-thumb:hover {
     background-color: #555;
   }
-}
-
-.tweets {
-  margin-top: 20px;
-  overflow-x: hidden;
 }
 
 .tweet {
@@ -82,6 +46,7 @@ $twitter-blue-dark: #0f81c7;
 
 .tweet-content {
   flex: 1;
+  margin-right: 20px;
 }
 
 .username {
@@ -98,6 +63,16 @@ $twitter-blue-dark: #0f81c7;
   font-size: 16px;
   word-break: break-all;
   hyphens: auto;
+
+  .hashtag-mention {
+    color: $twitter-blue;
+    text-decoration: none;
+    transition: color 0.3s ease-in-out;
+
+    &:hover {
+      color: $twitter-blue-dark;
+    }
+  }
 }
 
 .actions {
@@ -115,6 +90,10 @@ $twitter-blue-dark: #0f81c7;
   &:hover {
     color: $twitter-blue;
   }
+
+  &.fa-trash:hover {
+    color: $delete-red;
+  }
 }
 
 .tweet-upper-row {
@@ -123,25 +102,47 @@ $twitter-blue-dark: #0f81c7;
   align-items: center;
 }
 
-.pagination-buttons {
-  padding-right: 15px;
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 30px;
-  gap: 10px;
+.load-more-animation {
+  text-align: center;
+
+  .loading-dots {
+    display: inline-block;
+
+    div {
+      width: 8px;
+      height: 8px;
+      margin: 0 4px;
+      background-color: $twitter-blue;
+      border-radius: 50%;
+      display: inline-block;
+      animation: loading-wave 1.2s infinite;
+
+      &:nth-child(1) {
+        animation-delay: -0.24s;
+      }
+
+      &:nth-child(2) {
+        animation-delay: -0.12s;
+      }
+
+      &:nth-child(3) {
+        animation-delay: 0s;
+      }
+
+      &:nth-child(4) {
+        animation-delay: 0.12s;
+      }
+    }
+  }
 }
 
-.prev-button,
-.next-button {
-  @include button-styles;
-}
-
-.prev-button:before {
-  content: "\f060";
-}
-
-.next-button:before {
-  content: "\f061";
+@keyframes loading-wave {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.5);
+  }
 }
 
 .app-loader-container {

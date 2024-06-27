@@ -1,49 +1,45 @@
 <app-tweet (tweetCreated)="onTweetCreated($event)"></app-tweet>
-<div *ngIf="isLoading" class="app-loader-container">
+
+<div *ngIf="isLoading && tweets.length === 0" class="app-loader-container">
   <app-loader></app-loader>
 </div>
-<div *ngIf="!isLoading" class="timeline-container">
+
+<div class="timeline-container">
   <div class="tweet" *ngFor="let tweetObj of tweets">
     <img src="assets/pp.png" alt="Profile Pic" class="profile-pic" />
     <div class="tweet-content">
       <div class="tweet-upper-row">
         <div>
-          <div class="username">
-            {{ tweetObj.user.username | truncate : 30 }}
-          </div>
-          <div class="timestamp">
-            {{ utilityService.getTimeSincePublished(tweetObj.publishedTime) }}
-          </div>
+          <div class="username">{{ tweetObj.username | truncate : 30 }}</div>
+          <div class="timestamp">{{ utilityService.getTimeSincePublished(tweetObj.publishedTime) }}</div>
         </div>
         <div>
           <div class="actions">
-            <i class="action-icon far fa-comment"></i>
             <i class="action-icon fa fa-retweet"></i>
             <i class="action-icon far fa-heart"></i>
+            <i *ngIf="isTweetOwner(tweetObj)" class="action-icon fas fa-trash" (click)="deleteTweet(tweetObj.id)"></i>
           </div>
         </div>
       </div>
-      <div class="tweet-text">{{ tweetObj.content }}</div>
+      <div class="tweet-text">
+        <ng-container *ngFor="let part of utilityService.formatTweetContent(tweetObj.content)">
+          <ng-container *ngIf="part.type === 'text'; else hashtagMention">{{ part.text }}</ng-container>
+          <ng-template #hashtagMention>
+            <a [href]="part.link" class="hashtag-mention">{{ part.text }}</a>
+          </ng-template>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <div style="visibility: hidden;" #scrollAnchor>load more</div>
+
+  <div *ngIf="isLoading && tweets.length > 0" class="load-more-animation">
+    <div class="loading-dots">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
     </div>
   </div>
 </div>
-<div *ngIf="tweets.length && !isLoading" class="pagination-buttons">
-  <button
-    class="prev-button"
-    [disabled]="isPrevButtonDisabled()"
-    (click)="onPrevClick()"
-  ></button>
-  <button
-    class="next-button"
-    [disabled]="isNextButtonDisabled()"
-    (click)="onNextClick()"
-  ></button>
-</div>
-<!-- <app-paginator
-  [tweetsLength]="tweets.length"
-  [isLoading]="isLoading"
-  [isNextButtonDisabled]="isPrevButtonDisabled()"
-  [isNextButtonDisabled]="isNextButtonDisabled()"
-  (prevButtonClick)="onPrevClick()"
-  (nextButtonClick)="onNextClick()"
-></app-paginator> -->

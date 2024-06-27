@@ -3,10 +3,5 @@ export interface Tweet {
   username: string;
   publishedTime: number;
   content: string;
-  user: {
-    active: boolean;
-    email: string;
-    id: string;
-    username: string;
-  };
+  userId: string
 }

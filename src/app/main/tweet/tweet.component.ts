@@ -36,9 +36,9 @@ export class TweetComponent implements OnDestroy {
       this.tweetText = '';
       this.charCount = 160;
       this.subscriptions.push(this.twitterApiService.createTweet(tweetText).subscribe(
-        (response: any) => {
-          console.log('Tweet created:', response.tweet);
-          this.tweetCreated.emit(response.tweet);
+        (tweet: any) => {
+          console.log('Tweet created:', tweet);
+          this.tweetCreated.emit(tweet);
         },
         (error) => {
           console.error('Error creating tweet:', error);

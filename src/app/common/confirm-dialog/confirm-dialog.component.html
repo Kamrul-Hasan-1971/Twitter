@@ -1,0 +1,14 @@
+<div fxLayout="column" fxLayoutAlign="space-between stretch" class="error-container">
+    <!-- <h2 mat-dialog-title class="error-title">{{ data.title }}</h2> -->
+    <mat-dialog-content class="error-content-container">
+      <div fxLayout="row" fxLayoutAlign="center none">
+        <p class="error-message">{{ data.message }}</p>
+      </div>
+    </mat-dialog-content>
+    <mat-dialog-actions class="dialog-actions" align="end">
+      <div class="action-buttons">
+          <button mat-button class="retry-button" (click)="onNoClick()">No</button>
+        <button mat-button class="okay-button" (click)="onYesClick()">Okay</button>
+      </div>
+    </mat-dialog-actions>
+  </div>

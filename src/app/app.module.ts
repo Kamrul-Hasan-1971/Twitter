@@ -29,8 +29,10 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { getStorage, provideStorage } from '@angular/fire/storage';
 import { environment } from 'src/environments/environment';
 import { ErrorDialogComponent } from './common/error-dialog/error-dialog.component';
+import { ConfirmDialogComponent } from './common/confirm-dialog/confirm-dialog.component';
+
 @NgModule({
-  declarations: [AppComponent, ErrorDialogComponent],
+  declarations: [AppComponent, ErrorDialogComponent, ConfirmDialogComponent],
   imports: [
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideFirestore(() => getFirestore()),
