@@ -144,7 +144,7 @@ export class MyTweetsComponent implements OnInit, OnDestroy {
           this.subscriptions.push(
             forkJoin([deleteTweetObservable, updateHashtagsObservable]).subscribe(
               ([deleteResult, updateResult]) => {
-                debugger
+                this.tweets = this.tweets.filter(tweet => tweet.id !== tweetObj.id);
                 // Handle delete tweet and update hashtags results
                 this.tweets = this.tweets.filter(tweet => tweet.id !== tweetObj.id);
                 console.log('Tweet deleted and hashtags updated successfully');
