@@ -76,7 +76,6 @@ export class TimelineComponent implements OnInit, OnDestroy, AfterViewInit {
       modifiedTweet.userId = doc.userId;
     }
   }
-  
 
   private handleRemovedTweet(doc: Tweet): void {
     this.tweets = this.tweets.filter(tweet => tweet.id !== doc.id);

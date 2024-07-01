@@ -6,6 +6,7 @@ import { Tweet } from 'src/app/interfaces/tweet.interface';
 import { TwitterApiService } from 'src/app/services/api/twitter-api.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { ConfirmDialogComponent } from 'src/app/common/confirm-dialog/confirm-dialog.component';
+import { SharedDataService } from 'src/app/services/data/shared-data.service';
 
 @Component({
   selector: 'app-my-tweets',
@@ -30,6 +31,7 @@ export class MyTweetsComponent implements OnInit, OnDestroy {
     public utilityService: UtilityService,
     private authService: AuthService,
     private dialog: MatDialog,
+    private sharedDataService: SharedDataService
   ) {}
 
   ngOnInit(): void {
@@ -38,6 +40,52 @@ export class MyTweetsComponent implements OnInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.setupObserver();
+    this.subscribeUpdateTweetList();
+  }
+
+  subscribeUpdateTweetList() {
+    this.subscriptions.push
+    (
+        this.sharedDataService.updateTweetList.subscribe(change => {
+          if(change && change.doc && change.doc.email === this.authService.getUserEmail()){
+            if (change.type === "added") {
+              this.handleAddedTweet(change.doc);
+            } else if (change.type === "modified") {
+              this.handleModifiedTweet(change.doc);
+            } else if (change.type === "removed") {
+              this.handleRemovedTweet(change.doc);
+            }
+          }
+      }),
+    );
+  }
+
+  private handleAddedTweet(doc: Tweet): void {
+    const newTweet: Tweet = {
+      id: doc.id,
+      username: doc.username,
+      publishedTime: doc.publishedTime,
+      content: doc.content,
+      email: doc.email,
+      userId: doc.userId
+    };
+    this.tweets.unshift(newTweet);
+  }
+
+  private handleModifiedTweet(doc: Tweet): void {
+    const modifiedTweet = this.tweets.find(tweet => tweet.id === doc.id);
+    if (modifiedTweet) {
+      modifiedTweet.id = doc.id;
+      modifiedTweet.username = doc.username;
+      modifiedTweet.publishedTime = doc.publishedTime;
+      modifiedTweet.content = doc.content;
+      modifiedTweet.email = doc.email;
+      modifiedTweet.userId = doc.userId;
+    }
+  }
+
+  private handleRemovedTweet(doc: Tweet): void {
+    this.tweets = this.tweets.filter(tweet => tweet.id !== doc.id);
   }
 
   setupObserver() {
@@ -96,6 +144,7 @@ export class MyTweetsComponent implements OnInit, OnDestroy {
           this.subscriptions.push(
             forkJoin([deleteTweetObservable, updateHashtagsObservable]).subscribe(
               ([deleteResult, updateResult]) => {
+                debugger
                 // Handle delete tweet and update hashtags results
                 this.tweets = this.tweets.filter(tweet => tweet.id !== tweetObj.id);
                 console.log('Tweet deleted and hashtags updated successfully');
