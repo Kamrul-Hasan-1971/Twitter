@@ -41,11 +41,11 @@ export class UserFollowingComponent implements OnInit, OnDestroy {
   }
 
   onUnfollowClick(following: any) {
-    this.subscriptions.push(this.twitterApiService.unfollowUser(following.id).subscribe(
+    this.subscriptions.push(this.twitterApiService.unfollowUser(following.email).subscribe(
       (response: any) => {
         console.log('Unfollow response:', response);
         this.followings = this.followings.filter(
-          (user) => user.id !== following.id
+          (user) => user.email !== following.email
         );
       },
       (error: any) => {

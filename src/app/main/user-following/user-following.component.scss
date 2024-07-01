@@ -3,7 +3,6 @@
   flex-direction: column;
   justify-content: center;
   overflow-y: auto;
-  max-height: calc(100vh - 60px);
 
   &::-webkit-scrollbar {
     width: 6px;
@@ -20,7 +19,7 @@
 }
 
 .user-list-container {
-  //max-height: calc(100vh - 130px);
+  max-height: 94vh;
   overflow-y: auto;
 
   &::-webkit-scrollbar {
@@ -186,7 +185,7 @@
 }
 
 .app-loader-container {
-  height: calc(100vh - 130px);
+  height: 87vh;
   display: flex;
   align-items: center;
   justify-content: center;

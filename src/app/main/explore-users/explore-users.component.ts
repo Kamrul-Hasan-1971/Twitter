@@ -56,11 +56,11 @@ export class ExploreUsersComponent implements OnInit, OnDestroy {
 
     if (user.isFollowing) {
       this.twitterApiService
-        .followUser(user.id)
+        .followUser(user.email)
         .subscribe((response: any) => {});
     } else {
       this.twitterApiService
-        .unfollowUser(user.id)
+        .unfollowUser(user.email)
         .subscribe((response: any) => {
           console.log('Unfollowed:', response.resp);
         });
