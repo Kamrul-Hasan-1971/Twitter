@@ -1,7 +1,7 @@
 import { MatDialog } from '@angular/material/dialog';
 import { UtilityService } from './../../services/utility/utility.service';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Subscription, forkJoin } from 'rxjs';
+import { Subscription, concatMap, forkJoin } from 'rxjs';
 import { Tweet } from 'src/app/interfaces/tweet.interface';
 import { TwitterApiService } from 'src/app/services/api/twitter-api.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
@@ -133,30 +133,29 @@ export class MyTweetsComponent implements OnInit, OnDestroy {
       width: '450px',
       data: { message: 'Are you sure you want to delete this tweet?' }
     });
-  
-    this.subscriptions.push(
-      dialogRef.afterClosed().subscribe(result => {
-        if (result) {
-          // Delete the tweet and update hashtags concurrently
-          const deleteTweetObservable = this.twitterApiService.deleteTweet(tweetObj.id);
-          const updateHashtagsObservable = this.twitterApiService.updateHashtags(tweetObj.content, -1);
-  
-          this.subscriptions.push(
-            forkJoin([deleteTweetObservable, updateHashtagsObservable]).subscribe(
-              ([deleteResult, updateResult]) => {
-                this.tweets = this.tweets.filter(tweet => tweet.id !== tweetObj.id);
-                // Handle delete tweet and update hashtags results
-                this.tweets = this.tweets.filter(tweet => tweet.id !== tweetObj.id);
-                console.log('Tweet deleted and hashtags updated successfully');
-              },
-              error => {
-                console.error('Error deleting tweet or updating hashtags:', error);
-              }
-            )
-          );
-        }
-      })
-    );
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.subscriptions.push(
+          this.twitterApiService.deleteTweet(tweetObj.id).pipe(
+            concatMap(deleteResult => {
+              // Delete tweet successfully, now update hashtags
+              this.tweets = this.tweets.filter(tweet => tweet.id !== tweetObj.id);
+              return this.twitterApiService.updateHashtags(tweetObj.content, -1);
+            })
+          ).subscribe(
+            updateResult => {
+              // Handle successful response
+              console.log('Tweet deleted and hashtags updated successfully');
+            },
+            error => {
+              // Handle error
+              console.error('Error updating hashtags after deleting tweet:', error);
+            }
+          )
+        );
+      }
+    });
   }
 
   loadMoreTweets() {
