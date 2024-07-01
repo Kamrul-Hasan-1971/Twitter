@@ -1,9 +1,11 @@
+import { MatDialog } from '@angular/material/dialog';
 import { UtilityService } from './../../services/utility/utility.service';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subscription, forkJoin } from 'rxjs';
 import { Tweet } from 'src/app/interfaces/tweet.interface';
 import { TwitterApiService } from 'src/app/services/api/twitter-api.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { ConfirmDialogComponent } from 'src/app/common/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-my-tweets',
@@ -26,7 +28,8 @@ export class MyTweetsComponent implements OnInit, OnDestroy {
   constructor(
     private twitterApiService: TwitterApiService,
     public utilityService: UtilityService,
-    private authService: AuthService
+    private authService: AuthService,
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -77,17 +80,33 @@ export class MyTweetsComponent implements OnInit, OnDestroy {
     );
   }
 
-  deleteTweet(tweetId: string) {
-    this.tweets = this.tweets.filter(tweet => tweet.id !== tweetId);
+  deleteTweet(tweetObj: Tweet) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '450px',
+      data: { message: 'Are you sure you want to delete this tweet?' }
+    });
+  
     this.subscriptions.push(
-      this.twitterApiService.deleteTweet(tweetId).subscribe(
-        () => {
-          // this.tweets = this.tweets.filter(tweet => tweet.id !== tweetId);
-        },
-        (error) => {
-          console.error('Failed to delete tweet:', error);
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          // Delete the tweet and update hashtags concurrently
+          const deleteTweetObservable = this.twitterApiService.deleteTweet(tweetObj.id);
+          const updateHashtagsObservable = this.twitterApiService.updateHashtags(tweetObj.content, -1);
+  
+          this.subscriptions.push(
+            forkJoin([deleteTweetObservable, updateHashtagsObservable]).subscribe(
+              ([deleteResult, updateResult]) => {
+                // Handle delete tweet and update hashtags results
+                this.tweets = this.tweets.filter(tweet => tweet.id !== tweetObj.id);
+                console.log('Tweet deleted and hashtags updated successfully');
+              },
+              error => {
+                console.error('Error deleting tweet or updating hashtags:', error);
+              }
+            )
+          );
         }
-      )
+      })
     );
   }
 

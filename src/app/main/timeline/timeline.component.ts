@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subscription, forkJoin } from 'rxjs';
 import { Tweet } from 'src/app/interfaces/tweet.interface';
 import { TwitterApiService } from 'src/app/services/api/twitter-api.service';
 import { UtilityService } from 'src/app/services/utility/utility.service';
@@ -135,22 +135,30 @@ export class TimelineComponent implements OnInit, OnDestroy, AfterViewInit {
   //   this.tweets.unshift(newTweet);
   // }
 
-  deleteTweet(tweetId: string) {
+  deleteTweet(tweetObj: Tweet) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '450px',
       data: { message: 'Are you sure you want to delete this tweet?' }
     });
-
+  
     this.subscriptions.push(
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
-          this.twitterApiService.deleteTweet(tweetId).subscribe(
-            () => {
-              this.tweets = this.tweets.filter(tweet => tweet.id !== tweetId);
-            },
-            error => {
-              console.error('Error deleting tweet:', error);
-            }
+          // Delete the tweet and update hashtags concurrently
+          const deleteTweetObservable = this.twitterApiService.deleteTweet(tweetObj.id);
+          const updateHashtagsObservable = this.twitterApiService.updateHashtags(tweetObj.content, -1);
+  
+          this.subscriptions.push(
+            forkJoin([deleteTweetObservable, updateHashtagsObservable]).subscribe(
+              ([deleteResult, updateResult]) => {
+                // Handle delete tweet and update hashtags results
+                this.tweets = this.tweets.filter(tweet => tweet.id !== tweetObj.id);
+                console.log('Tweet deleted and hashtags updated successfully');
+              },
+              error => {
+                console.error('Error deleting tweet or updating hashtags:', error);
+              }
+            )
           );
         }
       })

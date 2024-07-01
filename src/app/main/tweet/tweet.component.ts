@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { TwitterApiService } from 'src/app/services/api/twitter-api.service';
-import { Subscription } from 'rxjs';
+import { Subscription, forkJoin, switchMap } from 'rxjs';
 import { Tweet } from 'src/app/interfaces/tweet.interface';
 
 @Component({
@@ -35,15 +35,21 @@ export class TweetComponent implements OnDestroy {
       const tweetText = this.tweetText;
       this.tweetText = '';
       this.charCount = 160;
-      this.subscriptions.push(this.twitterApiService.createTweet(tweetText).subscribe(
-        (tweet: any) => {
-          //console.log('Tweet created:', tweet);
-          //this.tweetCreated.emit(tweet);
-        },
-        (error) => {
-          console.error('Error creating tweet:', error);
-        }
-      ));
+  
+      const createTweetObservable = this.twitterApiService.createTweet(tweetText);
+      const updateHashtagsObservable = this.twitterApiService.updateHashtags(tweetText, 1);
+  
+      this.subscriptions.push(
+        forkJoin([createTweetObservable, updateHashtagsObservable]).subscribe(
+          ([tweet, updateResult]) => {
+            console.log('Tweet created and hashtags updated successfully');
+            // Handle the tweet and updateResult if needed
+          },
+          (error) => {
+            console.error('Error creating tweet or updating hashtags:', error);
+          }
+        )
+      );
     }
   }
 

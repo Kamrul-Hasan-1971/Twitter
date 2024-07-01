@@ -6,7 +6,7 @@ import { AuthService } from '../auth/auth.service';
 import { ToastService } from 'src/app/services/toast/toast.service';
 //import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { Tweet } from 'src/app/interfaces/tweet.interface';
-import { CollectionReference, DocumentData, Firestore, QueryConstraint, arrayRemove, arrayUnion, collection, deleteDoc, doc, getDoc,getDocs, limit, onSnapshot, orderBy, query, setDoc, startAfter, updateDoc, where } from '@angular/fire/firestore';
+import { CollectionReference, DocumentData, Firestore, QueryConstraint, arrayRemove, arrayUnion, collection, deleteDoc, doc, getDoc,getDocs, increment, limit, onSnapshot, orderBy, query, setDoc, startAfter, updateDoc, where } from '@angular/fire/firestore';
 import { v4 as uuidv4 } from 'uuid'; 
 import { SharedDataService } from '../data/shared-data.service';
 import { User } from 'src/app/interfaces/user.interface';
@@ -52,7 +52,12 @@ export class TwitterApiService {
   }
 
   getHashTrends(): Observable<string[]> {
-    const hashTagQuery = query(this.hashtagsCollectionRef, orderBy('count', 'desc'), limit(20));
+    const hashTagQuery = query(
+      this.hashtagsCollectionRef,
+      orderBy('count', 'desc'),
+      where('count', '>', 0), // Filter where count is greater than 0
+      limit(25)
+    );    
     return new Observable<string[]>((observer) => {
       getDocs(hashTagQuery).then((snapshot) => {
         const trends = snapshot.docs.map(doc => doc.id);
@@ -177,6 +182,19 @@ export class TwitterApiService {
       })
     );
   }
+
+  updateHashtags(content: string, incrementValue: number): Observable<void[]> {
+    const hashtags = this.utilityService.getHashtags(content);
+  
+    const updateObservables = hashtags.map((hashtag) => {
+      const key = hashtag.toLowerCase();
+      const hashtagRef = doc(this.hashtagsCollectionRef, key);
+      return from(setDoc(hashtagRef, { count: incrementValue}, { merge: true }));
+    });
+  
+    return forkJoin(updateObservables);
+  };
+  
   
 
   createTweet(content: string): Observable<Tweet> {
@@ -252,7 +270,6 @@ console.log("tweet", tweet);
   getDocumentChanges() {
     const currentTime = Date.now();
     const q = query(this.tweetsCollectionRef, where("publishedTime", ">=", currentTime));
-    let emitChanges = false;
     const unsubscribeSnapshotListener = onSnapshot(q, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
         if (change.type === "added") {
@@ -264,10 +281,7 @@ console.log("tweet", tweet);
         if (change.type === "removed") {
           console.log("Removed Tweet: ", change.doc.data());
         }
-        if(emitChanges){
         this.sharedDataService.updateTweetList.next({ doc: change.doc.data() as Tweet, type: change.type });
-        }
-        emitChanges = true; // hack
       });
     });
   

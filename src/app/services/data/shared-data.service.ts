@@ -10,6 +10,8 @@ export class SharedDataService {
   followingIdsSet: Set<string>;
   users: User[];
   updateTweetList: Subject<{doc:Tweet, type: string}> = new Subject();
+  destroy$ = new Subject<void>(); // Subject to signal component destruction
+
 
 
   constructor() {

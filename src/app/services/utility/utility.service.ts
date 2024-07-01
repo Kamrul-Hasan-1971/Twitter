@@ -94,4 +94,13 @@ export class UtilityService {
     return char === '#' || char === '@';
   }
 
+  getHashtags(content: string) {
+    const hashtags = content.match(/#\w+/g) || [];
+    return hashtags;
+  };
+  
+  sanitizeFirebaseKey(key: string){
+    return key.replace(/[.#$[\]]/g, '');
+  };
+
 }
