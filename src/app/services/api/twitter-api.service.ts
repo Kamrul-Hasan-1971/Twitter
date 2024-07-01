@@ -156,26 +156,26 @@ export class TwitterApiService {
   }
 
   followUser(email: string): Observable<any> {
-    const userEmail = this.authService.getUserEmail(); // Example: Get current user email from auth service
+    const userEmail = this.authService.getUserEmail();
     const docRef = doc(this.followingsCollectionRef, userEmail);
 
-    return from(updateDoc(docRef, {
-      followingIds: arrayUnion(email)
-    })).pipe(
-      catchError(error => {
-        console.error('Error following user:', error);
-        return throwError(error);
-      })
+    return from(setDoc(docRef, {
+        followingIds: arrayUnion(email)
+    }, { merge: true })).pipe(
+        catchError(error => {
+            console.error('Error following user:', error);
+            return throwError(error);
+        })
     );
-  }
+}
 
   unfollowUser(email: string): Observable<any> {
     const userEmail = this.authService.getUserEmail(); // Example: Get current user email from auth service
     const docRef = doc(this.followingsCollectionRef, userEmail);
 
-    return from(updateDoc(docRef, {
+    return from(setDoc(docRef, {
       followingIds: arrayRemove(email)
-    })).pipe(
+    }, { merge: true })).pipe(
       catchError(error => {
         console.error('Error following user:', error);
         return throwError(error);
