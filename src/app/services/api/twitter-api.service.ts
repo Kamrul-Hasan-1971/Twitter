@@ -189,9 +189,7 @@ export class TwitterApiService {
     const updateObservables = hashtags.map((hashtag) => {
       const key = hashtag.toLowerCase();
       const hashtagRef = doc(this.hashtagsCollectionRef, key);
-      return from(setDoc(hashtagRef, { count: incrementValue }, { merge: true })).pipe(
-        map(() => undefined) // Transform response to undefined to match return type
-      );
+      return from(setDoc(hashtagRef, { count:increment(incrementValue) }, { merge: true }));
     });
     return forkJoin(updateObservables);
   };
