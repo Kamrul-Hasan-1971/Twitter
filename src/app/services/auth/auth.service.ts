@@ -120,6 +120,10 @@ export class AuthService {
     return this.currentUser?.uid || '';
   }
 
+  getUserEmail(): string {
+    return this.currentUser?.email || '';
+  }
+
   getUserName(): string{
     return 'Kamrul'; //TODO: temporary
   }

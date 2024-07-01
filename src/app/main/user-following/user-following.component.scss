@@ -20,7 +20,7 @@
 }
 
 .user-list-container {
-  max-height: calc(100vh - 130px);
+  //max-height: calc(100vh - 130px);
   overflow-y: auto;
 
   &::-webkit-scrollbar {

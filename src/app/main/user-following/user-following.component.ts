@@ -27,10 +27,10 @@ export class UserFollowingComponent implements OnInit, OnDestroy {
   getFollowings() {
     this.isLoading = true;
     this.twitterApiService
-      .getFollowings(this.currentPage, this.pageSize)
+      .getFollowingUserDetails()
       .subscribe(
         (response) => {
-          this.followings = response.followings;
+          this.followings = response;
           this.isLoading = false;
         },
         (error) => {

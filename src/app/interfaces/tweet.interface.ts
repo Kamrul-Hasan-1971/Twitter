@@ -3,5 +3,6 @@ export interface Tweet {
   username: string;
   publishedTime: number;
   content: string;
-  userId: string
+  userId: string;
+  email: string;
 }

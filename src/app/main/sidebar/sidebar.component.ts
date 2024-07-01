@@ -19,7 +19,7 @@ export class SidebarComponent implements OnInit {
   menuItems: MenuItem[] = [
     { id: 1, icon: 'fas fa-home', label: 'Home', link: '/home' },
     { id: 2, icon: 'far fa-comment', label: 'My Tweets', link: '/my-tweets' },
-    { id: 3, icon: 'fas fa-hashtag', label: 'Explore-users', link: '/explore-users'},
+    { id: 3, icon: 'fas fa-hashtag', label: 'Explore Users', link: '/explore-users'},
     { id: 4, icon: 'fas fa-users', label: 'Following', link: '/following' },
     { id: 5, icon: 'fas fa-sign-out-alt', label: 'Logout', link: '/logout' },
   ];

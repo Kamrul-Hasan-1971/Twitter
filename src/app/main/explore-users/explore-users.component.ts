@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TwitterApiService } from '../../services/api/twitter-api.service';
 import { Subscription, forkJoin, map } from 'rxjs';
+import { User } from 'src/app/interfaces/user.interface';
 
 @Component({
   selector: 'app-explore-users',
@@ -9,7 +10,7 @@ import { Subscription, forkJoin, map } from 'rxjs';
 })
 export class ExploreUsersComponent implements OnInit, OnDestroy {
   
-  users: any[] = [];
+  users: User[] = [];
   currentPage: number = 1;
   pageSize: number = 30;
   isLoading: boolean = false;
@@ -23,23 +24,11 @@ export class ExploreUsersComponent implements OnInit, OnDestroy {
 
   getUsers(): void {
     this.isLoading = true;
-    const subscription = forkJoin([
-      this.twitterApiService.getUsers(this.currentPage, this.pageSize),
-      this.twitterApiService.getFollowings(1, 1000),
-    ])
-      .pipe(
-        map(([usersResponse, followingsResponse]) => {
-          this.users = usersResponse.users;
-          const followingIds = followingsResponse.followings.map(
-            (following: any) => following.id
-          );
-          this.users.forEach((user) => {
-            user.isFollowing = followingIds.includes(user.id);
-          });
-        })
-      )
+    const subscription = 
+      this.twitterApiService.getUsers()
       .subscribe(
-        () => {
+        (users) => {
+          this.users = users;
           this.isLoading = false;
         },
         (error) => {
