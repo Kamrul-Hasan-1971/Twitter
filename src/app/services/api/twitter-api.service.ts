@@ -18,6 +18,7 @@ export class TwitterApiService {
   tweetsCollectionRef: CollectionReference<DocumentData>; 
   followingsCollectionRef: CollectionReference<DocumentData>; 
   usersCollectionRef: CollectionReference<DocumentData>; 
+  hashtagsCollectionRef: CollectionReference<DocumentData>; 
 
   constructor(
     private http: HttpClient,
@@ -30,6 +31,7 @@ export class TwitterApiService {
     this.tweetsCollectionRef = collection(this.firestore, 'tweets');
     this.followingsCollectionRef = collection(this.firestore, 'followings');
     this.usersCollectionRef = collection(this.firestore, 'users');
+    this.hashtagsCollectionRef = collection(this.firestore, 'hashtags');
     this.getDocumentChanges();
   }
 
@@ -43,6 +45,18 @@ export class TwitterApiService {
       getDocs(query(this.tweetsCollectionRef, ...firestoreQuery)).then((snapshot) => {
         const tweets = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Tweet));
         observer.next(tweets);
+      }).catch((error) => {
+        observer.error(error);
+      });
+    });
+  }
+
+  getHashTrends(): Observable<string[]> {
+    const hashTagQuery = query(this.hashtagsCollectionRef, orderBy('count', 'desc'), limit(20));
+    return new Observable<string[]>((observer) => {
+      getDocs(hashTagQuery).then((snapshot) => {
+        const trends = snapshot.docs.map(doc => doc.id);
+      observer.next(trends);
       }).catch((error) => {
         observer.error(error);
       });
@@ -241,7 +255,6 @@ console.log("tweet", tweet);
     let emitChanges = false;
     const unsubscribeSnapshotListener = onSnapshot(q, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
-        debugger
         if (change.type === "added") {
           console.log("New Tweet: ", change.doc.data());
         }
