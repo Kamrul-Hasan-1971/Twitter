@@ -6,7 +6,7 @@ import { AuthService } from '../auth/auth.service';
 import { ToastService } from 'src/app/services/toast/toast.service';
 //import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { Tweet } from 'src/app/interfaces/tweet.interface';
-import { CollectionReference, DocumentData, Firestore, QueryConstraint, arrayRemove, arrayUnion, collection, deleteDoc, doc, getDoc,getDocs, limit, orderBy, query, setDoc, startAfter, updateDoc, where } from '@angular/fire/firestore';
+import { CollectionReference, DocumentData, Firestore, QueryConstraint, arrayRemove, arrayUnion, collection, deleteDoc, doc, getDoc,getDocs, limit, onSnapshot, orderBy, query, setDoc, startAfter, updateDoc, where } from '@angular/fire/firestore';
 import { v4 as uuidv4 } from 'uuid'; 
 import { SharedDataService } from '../data/shared-data.service';
 import { User } from 'src/app/interfaces/user.interface';
@@ -14,13 +14,6 @@ import { User } from 'src/app/interfaces/user.interface';
   providedIn: 'root',
 })
 export class TwitterApiService {
-  private API_BASE_URL = 'https://missingdata.pythonanywhere.com';
-  private API_VERSION = '';
-  private FOLLOW_ENDPOINT = '/follow';
-  private UNFOLLOW_ENDPOINT = '/unfollow';
-  private USERS_ENDPOINT = '/users';
-  private TIMELINE = '/timeline';
-  private MY_TWEETS = '/my-tweets';
 
   tweetsCollectionRef: CollectionReference<DocumentData>; 
   followingsCollectionRef: CollectionReference<DocumentData>; 
@@ -37,7 +30,7 @@ export class TwitterApiService {
     this.tweetsCollectionRef = collection(this.firestore, 'tweets');
     this.followingsCollectionRef = collection(this.firestore, 'followings');
     this.usersCollectionRef = collection(this.firestore, 'users');
-
+    this.getDocumentChanges();
   }
 
   getTimelinePosts(lastKey?: number, pageSize: number = 10): Observable<Tweet[]> {
@@ -241,4 +234,30 @@ console.log("tweet", tweet);
 
     return throwError(errorMessage);
   }
+
+  getDocumentChanges() {
+    const currentTime = Date.now();
+    const q = query(this.tweetsCollectionRef, where("publishedTime", ">=", currentTime));
+    let emitChanges = false;
+    const unsubscribeSnapshotListener = onSnapshot(q, (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        debugger
+        if (change.type === "added") {
+          console.log("New Tweet: ", change.doc.data());
+        }
+        if (change.type === "modified") {
+          console.log("Modified Tweet: ", change.doc.data());
+        }
+        if (change.type === "removed") {
+          console.log("Removed Tweet: ", change.doc.data());
+        }
+        if(emitChanges){
+        this.sharedDataService.updateTweetList.next({ doc: change.doc.data() as Tweet, type: change.type });
+        }
+        emitChanges = true; // hack
+      });
+    });
+  
+    // Optionally return unsubscribe function if you want to manage subscription outside
+  }  
 }

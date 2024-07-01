@@ -11,7 +11,7 @@ import { Tweet } from 'src/app/interfaces/tweet.interface';
 export class TweetComponent implements OnDestroy {
   tweetText: string = '';
   charCount: number = 160;
-  @Output() tweetCreated = new EventEmitter<Tweet>();
+  //@Output() tweetCreated = new EventEmitter<Tweet>();
   subscriptions : Subscription[] = [];
 
   constructor(private twitterApiService: TwitterApiService) {}
@@ -37,8 +37,8 @@ export class TweetComponent implements OnDestroy {
       this.charCount = 160;
       this.subscriptions.push(this.twitterApiService.createTweet(tweetText).subscribe(
         (tweet: any) => {
-          console.log('Tweet created:', tweet);
-          this.tweetCreated.emit(tweet);
+          //console.log('Tweet created:', tweet);
+          //this.tweetCreated.emit(tweet);
         },
         (error) => {
           console.error('Error creating tweet:', error);

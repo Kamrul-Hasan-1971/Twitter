@@ -6,6 +6,7 @@ import { UtilityService } from 'src/app/services/utility/utility.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/common/confirm-dialog/confirm-dialog.component';
+import { SharedDataService } from 'src/app/services/data/shared-data.service';
 
 @Component({
   selector: 'app-timeline',
@@ -28,11 +29,57 @@ export class TimelineComponent implements OnInit, OnDestroy, AfterViewInit {
     private twitterApiService: TwitterApiService,
     public utilityService: UtilityService,
     private authService: AuthService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private sharedDataService: SharedDataService
   ) {}
 
   ngOnInit(): void {
     this.getTimelineTweets();
+    this.subscribeUpdateTweetList();
+  }
+
+  subscribeUpdateTweetList() {
+    this.subscriptions.push
+    (
+        this.sharedDataService.updateTweetList.subscribe(change => {
+        if (change.type === "added") {
+          this.handleAddedTweet(change.doc);
+        } else if (change.type === "modified") {
+          this.handleModifiedTweet(change.doc);
+        } else if (change.type === "removed") {
+          this.handleRemovedTweet(change.doc);
+        }
+      }),
+    );
+  }
+
+  private handleAddedTweet(doc: Tweet): void {
+    const newTweet: Tweet = {
+      id: doc.id,
+      username: doc.username,
+      publishedTime: doc.publishedTime,
+      content: doc.content,
+      email: doc.email,
+      userId: doc.userId
+    };
+    this.tweets.unshift(newTweet);
+  }
+
+  private handleModifiedTweet(doc: Tweet): void {
+    const modifiedTweet = this.tweets.find(tweet => tweet.id === doc.id);
+    if (modifiedTweet) {
+      modifiedTweet.id = doc.id;
+      modifiedTweet.username = doc.username;
+      modifiedTweet.publishedTime = doc.publishedTime;
+      modifiedTweet.content = doc.content;
+      modifiedTweet.email = doc.email;
+      modifiedTweet.userId = doc.userId;
+    }
+  }
+  
+
+  private handleRemovedTweet(doc: Tweet): void {
+    this.tweets = this.tweets.filter(tweet => tweet.id !== doc.id);
   }
 
   ngAfterViewInit(): void {
@@ -84,9 +131,9 @@ export class TimelineComponent implements OnInit, OnDestroy, AfterViewInit {
     this.getTimelineTweets();
   }
 
-  onTweetCreated(newTweet: Tweet) {
-    this.tweets.unshift(newTweet);
-  }
+  // onTweetCreated(newTweet: Tweet) {
+  //   this.tweets.unshift(newTweet);
+  // }
 
   deleteTweet(tweetId: string) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {

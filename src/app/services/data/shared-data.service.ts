@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
+import { Tweet } from 'src/app/interfaces/tweet.interface';
 import { User } from 'src/app/interfaces/user.interface';
 
 @Injectable({
@@ -7,6 +9,8 @@ import { User } from 'src/app/interfaces/user.interface';
 export class SharedDataService {
   followingIdsSet: Set<string>;
   users: User[];
+  updateTweetList: Subject<{doc:Tweet, type: string}> = new Subject();
+
 
   constructor() {
     this.followingIdsSet = new Set<string>();

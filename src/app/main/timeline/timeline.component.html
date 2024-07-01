@@ -1,4 +1,6 @@
-<app-tweet (tweetCreated)="onTweetCreated($event)"></app-tweet>
+<!-- <app-tweet (tweetCreated)="onTweetCreated($event)"></app-tweet> -->
+<app-tweet></app-tweet>
+
 
 <div *ngIf="isLoading && tweets.length === 0" class="app-loader-container">
   <app-loader></app-loader>
