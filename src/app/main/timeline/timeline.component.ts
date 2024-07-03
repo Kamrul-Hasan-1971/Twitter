@@ -20,6 +20,7 @@ export class TimelineComponent implements OnInit, OnDestroy, AfterViewInit {
   subscriptions: Subscription[] = [];
   lastKey: number | null = null;
   allTweetsLoaded = false;
+  loggedInUserPhotoUrl: string = '';
 
   @ViewChild('scrollAnchor') scrollAnchor: ElementRef;
 
@@ -36,6 +37,7 @@ export class TimelineComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit(): void {
     this.getTimelineTweets();
     this.subscribeUpdateTweetList();
+    this.setUserPhotoUrl();
   }
 
   subscribeUpdateTweetList() {
@@ -167,6 +169,12 @@ export class TimelineComponent implements OnInit, OnDestroy, AfterViewInit {
 
   isTweetOwner(tweet: Tweet): boolean {
     return tweet.userId === this.authService.getUserId();
+  }
+
+  setUserPhotoUrl() {
+    this.loggedInUserPhotoUrl =
+      this.authService.getUserPhoto() || '../../../../assets/pp.png';
+    //console.log('photoUrl: ', photoUrl);
   }
 
   ngOnDestroy(): void {

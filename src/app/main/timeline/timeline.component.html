@@ -8,7 +8,7 @@
 
 <div class="timeline-container">
   <div class="tweet" *ngFor="let tweetObj of tweets">
-    <img src="assets/pp.png" alt="Profile Pic" class="profile-pic" />
+    <img [src]="loggedInUserPhotoUrl" alt="Profile Pic" class="profile-pic" />
     <div class="tweet-content">
       <div class="tweet-upper-row">
         <div>

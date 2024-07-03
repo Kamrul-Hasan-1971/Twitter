@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TwitterApiService } from '../../services/api/twitter-api.service';
 import { Subscription, forkJoin, map } from 'rxjs';
-import { User } from 'src/app/interfaces/user.interface';
+import { IUser } from 'src/app/interfaces/user.interface';
 
 @Component({
   selector: 'app-explore-users',
@@ -10,7 +10,7 @@ import { User } from 'src/app/interfaces/user.interface';
 })
 export class ExploreUsersComponent implements OnInit, OnDestroy {
   
-  users: User[] = [];
+  users: IUser[] = [];
   currentPage: number = 1;
   pageSize: number = 30;
   isLoading: boolean = false;

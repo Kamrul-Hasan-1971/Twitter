@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Tweet } from 'src/app/interfaces/tweet.interface';
-import { User } from 'src/app/interfaces/user.interface';
+import { IUser } from 'src/app/interfaces/user.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SharedDataService {
   followingIdsSet: Set<string>;
-  users: User[];
+  users: IUser[];
   updateTweetList: Subject<{doc:Tweet, type: string}> = new Subject();
   destroy$ = new Subject<void>(); // Subject to signal component destruction
 
@@ -32,11 +32,11 @@ export class SharedDataService {
     return this.followingIdsSet;
   }
 
-  seUsersList(users: User[]) {
+  seUsersList(users: IUser[]) {
     this.users = users;
   }
 
-  geUsersList(users: User[]) {
+  geUsersList(users: IUser[]) {
     return this.users || [];
   }
 

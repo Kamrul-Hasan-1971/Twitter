@@ -10,6 +10,8 @@ import {
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { CollectionReference, DocumentData, Firestore, collection, doc, setDoc } from '@angular/fire/firestore';
+import { IUser } from 'src/app/interfaces/user.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -27,9 +29,14 @@ export class AuthService {
 
   user$ = user(this.auth);
   private currentUser: User | null = null;
+  usersCollectionRef: CollectionReference<DocumentData>; 
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private firestore: Firestore,
+  ) {
     this.authStatusListener();
+    this.usersCollectionRef = collection(this.firestore, 'users');
   }
 
   authStatusListener() {
@@ -50,6 +57,15 @@ export class AuthService {
     try {
       const result = await signInWithPopup(this.auth, this.provider);
       const credential = GoogleAuthProvider.credentialFromResult(result);
+      if(result?.user?.metadata?.creationTime === result?.user?.metadata?.lastSignInTime) {
+        const newUserData: IUser = {
+          userId: result?.user?.uid,
+          username: result?.user?.displayName,
+          email: result?.user?.email,
+          active: true
+        };
+        await this.storeUserData(newUserData);
+      }
       return credential;
     } catch (error) {
       console.error('Error during Google login: ', error);
@@ -73,13 +89,20 @@ export class AuthService {
     }
   }
 
-  async registrationWithEmail(email: string, password: string) {
+  async registrationWithEmail(email: string, password: string, userName: string) {
     try {
       const userCredential = await createUserWithEmailAndPassword(
         this.auth,
         email,
         password
       );
+      const newUserData: IUser = {
+        userId: userCredential?.user?.uid,
+        username: userName,
+        email: email,
+        active: true
+      };
+      await this.storeUserData(newUserData);
       const credential =
         GoogleAuthProvider.credentialFromResult(userCredential);
       return credential;
@@ -130,5 +153,17 @@ export class AuthService {
 
   get isAuthenticated(): boolean {
     return this.auth.currentUser !== null;
+  }
+
+  async storeUserData(user: IUser) {
+    const userRef = doc(this.usersCollectionRef, user.email);
+    try {
+      console.log("Storing new user data..");
+      await setDoc(userRef, user);
+      console.log('User data stored successfully.');
+    } catch (error) {
+      console.error('Error storing user data: ', error);
+      throw error;
+    }
   }
 }

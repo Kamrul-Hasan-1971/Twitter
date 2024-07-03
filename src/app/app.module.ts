@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; // Import BrowserAnimationsModule
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
@@ -14,19 +14,16 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
-//import { MatMenuModule } from '@angular/material/menu';
-//import { MatDividerModule } from '@angular/material/divider';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatOptionModule } from '@angular/material/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { getAuth, provideAuth } from '@angular/fire/auth';
-import { provideFirebaseApp, getApp, initializeApp } from '@angular/fire/app';
-import { getFirestore, provideFirestore } from '@angular/fire/firestore';
-// import { provideDatabase, getDatabase } from '@angular/fire/database';
-import { getStorage, provideStorage } from '@angular/fire/storage';
+import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { provideAuth, getAuth } from '@angular/fire/auth';
+import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+import { provideStorage, getStorage } from '@angular/fire/storage';
 import { environment } from 'src/environments/environment';
 import { ErrorDialogComponent } from './common/error-dialog/error-dialog.component';
 import { ConfirmDialogComponent } from './common/confirm-dialog/confirm-dialog.component';
@@ -34,31 +31,31 @@ import { ConfirmDialogComponent } from './common/confirm-dialog/confirm-dialog.c
 @NgModule({
   declarations: [AppComponent, ErrorDialogComponent, ConfirmDialogComponent],
   imports: [
-    provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
-    provideFirestore(() => getFirestore()),
-    provideStorage(() => getStorage()),
-    provideAuth(() => {
-      const auth = getAuth();
-      return auth;
-    }),
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
     ReactiveFormsModule,
+    FormsModule,
     AppRoutingModule,
-    MatSnackBarModule,
-    MatCardModule,
+
+    // Angular Material modules
+    MatInputModule,
     MatButtonModule,
-    MatDialogModule,
+    MatCardModule,
     MatIconModule,
+    MatProgressSpinnerModule,
+    MatTooltipModule,
+    MatSnackBarModule,
+    MatDialogModule,
     MatFormFieldModule,
     MatOptionModule,
-    MatTooltipModule,
-    MatProgressSpinnerModule,
     FlexLayoutModule,
-    BrowserAnimationsModule,
-    ReactiveFormsModule,
-    FormsModule,
+
+    // Initialize Firebase services
+    provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
+    provideFirestore(() => getFirestore()),
+    provideAuth(() => getAuth()),
+    provideStorage(() => getStorage()),
   ],
   providers: [
     {

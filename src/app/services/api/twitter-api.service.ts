@@ -9,7 +9,7 @@ import { Tweet } from 'src/app/interfaces/tweet.interface';
 import { CollectionReference, DocumentData, Firestore, QueryConstraint, arrayRemove, arrayUnion, collection, deleteDoc, doc, getDoc,getDocs, increment, limit, onSnapshot, orderBy, query, setDoc, startAfter, updateDoc, where } from '@angular/fire/firestore';
 import { v4 as uuidv4 } from 'uuid'; 
 import { SharedDataService } from '../data/shared-data.service';
-import { User } from 'src/app/interfaces/user.interface';
+import { IUser } from 'src/app/interfaces/user.interface';
 @Injectable({
   providedIn: 'root',
 })
@@ -68,12 +68,12 @@ export class TwitterApiService {
     });
   }
 
-  getUsers(): Observable<User[]> {
+  getUsers(): Observable<IUser[]> {
     const usersQuery = query(this.usersCollectionRef);
 
-    return new Observable<User[]>(observer => {
+    return new Observable<IUser[]>(observer => {
       const usersObservable = from(getDocs(usersQuery)).pipe(
-        map(snapshot => snapshot.docs.map(doc => doc.data() as User)),
+        map(snapshot => snapshot.docs.map(doc => doc.data() as IUser)),
         catchError(error => {
           console.error('Error fetching users:', error);
           throw error;
@@ -96,11 +96,11 @@ export class TwitterApiService {
     });
   }
 
-  getFollowingUserDetails(): Observable<User[]> {
+  getFollowingUserDetails(): Observable<IUser[]> {
     return this.getFollowingsEmails().pipe(
       switchMap(followingEmails => {
         if (followingEmails.length === 0) {
-          return new Observable<User[]>(observer => {
+          return new Observable<IUser[]>(observer => {
             observer.next([]);
             observer.complete();
           });
@@ -116,12 +116,12 @@ export class TwitterApiService {
     );
   }
 
-  getUserByEmail(email: string): Observable<User> {
+  getUserByEmail(email: string): Observable<IUser> {
     const userDocRef = doc(this.firestore, `users/${email}`);
     return from(getDoc(userDocRef)).pipe(
       map(docSnap => {
         if (docSnap.exists()) {
-          return { email, ...docSnap.data() } as User;
+          return { email, ...docSnap.data() } as IUser;
         } else {
           throw new Error(`User with email ${email} not found`);
         }

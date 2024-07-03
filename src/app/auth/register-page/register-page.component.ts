@@ -54,7 +54,7 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
     const password = this.registerForm.value.password;
     if (this.registerForm.valid) {
       this.authService
-        .registrationWithEmail(email, password)
+        .registrationWithEmail(email, password, userName)
         .then(() => {
           this.registrationLoading = false;
           this.redirectToHome();

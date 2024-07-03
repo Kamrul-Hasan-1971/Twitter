@@ -21,6 +21,7 @@ export class MyTweetsComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   lastKey: number;
   allTweetsLoaded = false;
+  loggedInUserPhotoUrl: string = '';
 
 
   @ViewChild('scrollAnchor') scrollAnchor: ElementRef;
@@ -36,6 +37,7 @@ export class MyTweetsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getMyTweets();
+    this.setUserPhotoUrl();
   }
 
   ngAfterViewInit(): void {
@@ -165,6 +167,12 @@ export class MyTweetsComponent implements OnInit, OnDestroy {
 
   isTweetOwner(tweet: Tweet): boolean {
     return tweet.userId === this.authService.getUserId();
+  }
+  
+  setUserPhotoUrl() {
+    this.loggedInUserPhotoUrl =
+      this.authService.getUserPhoto() || '../../../../assets/pp.png';
+    //console.log('photoUrl: ', photoUrl);
   }
   
   ngOnDestroy(): void {
